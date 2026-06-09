@@ -10,6 +10,7 @@ Project ini dibuat untuk tugas kuliah Object-Oriented Programming, jadi fokus ut
 - Java Swing
 - JSON File Storage
 - Gson untuk serialization dan deserialization JSON
+- Maven untuk dependency management
 
 ## Fokus Project
 
@@ -56,7 +57,8 @@ EVO/
 |   |-- util/
 |   |-- exception/
 |   `-- main/
-`-- README.md
+|-- README.md
+`-- pom.xml
 ```
 
 ## File Penyimpanan JSON
@@ -164,19 +166,54 @@ cd EVO
 
 Jika project sudah ada di komputer, langsung buka folder `EVO` menggunakan IDE seperti IntelliJ IDEA, NetBeans, Eclipse, atau VS Code.
 
-## 3. Siapkan Dependency Gson
+## 3. Install Maven
 
-Project membutuhkan Gson agar object Java bisa disimpan dan dibaca sebagai JSON.
+Project ini direkomendasikan memakai Maven supaya dependency Gson otomatis terpasang di semua komputer anggota tim.
 
-Jika memakai IDE:
+Cek apakah Maven sudah terinstall:
 
-- Buat folder `lib/` jika belum ada.
-- Masukkan file Gson `.jar` ke folder `lib/`.
-- Tambahkan file `.jar` tersebut sebagai library project di IDE.
+```bash
+mvn -version
+```
 
-Jika memakai build tool, tambahkan dependency Gson sesuai format build tool yang dipakai.
+Jika belum ada, install Maven terlebih dahulu
 
-## 4. Pastikan Folder Data Ada
+Untuk VS Code, extension yang disarankan:
+
+- Extension Pack for Java
+- Maven for Java
+
+## 4. Dependency Gson
+
+Dependency Gson sudah tersedia di `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <version>2.13.1</version>
+</dependency>
+```
+
+## 5. Download Dependency
+
+Jalankan command ini dari root project:
+
+```bash
+mvn dependency:resolve
+```
+
+Di VS Code, biasanya dependency akan otomatis dibaca setelah `pom.xml` terdeteksi. Jika belum, buka Command Palette lalu pilih reload Java project.
+
+Langkah di VS Code:
+
+1. Buka folder `EVO`.
+2. Pastikan file `pom.xml` muncul di root project.
+3. Tunggu proses Java project import selesai.
+4. Buka tab Maven di sidebar.
+5. Jika dependency belum terbaca, klik reload project.
+
+## 6. Pastikan Folder Data Ada
 
 Pastikan folder `data/` berisi file berikut:
 
@@ -194,7 +231,7 @@ Jika file belum ada, buat file tersebut dan isi dengan:
 []
 ```
 
-## 5. Buat Package Utama
+## 7. Buat Package Utama
 
 Pastikan package berikut tersedia di dalam `src/`:
 
@@ -208,7 +245,7 @@ exception
 main
 ```
 
-## 6. Jalankan Aplikasi dari Main Class
+## 8. Jalankan Aplikasi
 
 Buat class entry point di package `main`, misalnya:
 
@@ -232,7 +269,29 @@ public class Main {
 
 Jalankan `Main.java` dari IDE.
 
-## 7. Alur Kerja Developer
+Atau jalankan lewat Maven:
+
+```bash
+mvn compile exec:java
+```
+
+## 9. Build Project
+
+Untuk memastikan semua source code berhasil dikompilasi:
+
+```bash
+mvn compile
+```
+
+Untuk membuat hasil build:
+
+```bash
+mvn package
+```
+
+Hasil build akan masuk ke folder `target/`.
+
+## 10. Alur Kerja Developer
 
 Saat membuat fitur baru, ikuti urutan ini:
 
@@ -244,7 +303,7 @@ Saat membuat fitur baru, ikuti urutan ini:
 6. Test fitur melalui GUI.
 7. Pastikan file JSON berubah setelah create, update, atau delete.
 
-## 8. Contoh Alur Fitur
+## 11. Contoh Alur Fitur
 
 Contoh saat menambah client:
 
@@ -270,3 +329,4 @@ Urutan proses:
 - Service layer menangani business logic.
 - Storage layer menangani file I/O saja.
 - Gunakan Gson untuk serialization dan deserialization.
+- Gunakan Maven untuk mengelola dependency project.
