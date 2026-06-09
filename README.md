@@ -6,11 +6,10 @@ Project ini dibuat untuk tugas kuliah Object-Oriented Programming, jadi fokus ut
 
 ## Tech Stack
 
-- Java 17
+- Java
 - Java Swing
 - JSON File Storage
 - Gson `.jar` untuk serialization dan deserialization JSON
-- VS Code Java project settings
 
 ## Fokus Project
 
@@ -62,7 +61,6 @@ EVO/
 |   |-- exception/
 |   |-- main/
 |   `-- test/
-|-- AGENTS.md
 `-- README.md
 ```
 
@@ -76,11 +74,7 @@ Data aplikasi disimpan di folder `data/`:
 - `data/vendors.json`
 - `data/payments.json`
 
-Setiap file berisi array JSON. Contoh isi awal:
-
-```json
-[]
-```
+Setiap file berisi array JSON.
 
 Setiap module harus membaca data dari file JSON saat aplikasi berjalan dan menyimpan ulang data setelah operasi tambah, ubah, atau hapus.
 
@@ -95,26 +89,6 @@ lib/gson-2.10.1.jar
 ```
 
 Folder `lib/` harus ikut ada di project supaya semua anggota tim bisa langsung menjalankan aplikasi tanpa setup dependency tambahan.
-
-## Konfigurasi VS Code
-
-VS Code membaca semua `.jar` di folder `lib/` melalui file:
-
-```text
-.vscode/settings.json
-```
-
-Isi konfigurasi:
-
-```json
-{
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar"
-    ]
-}
-```
-
-Artinya, semua file `.jar` di dalam folder `lib/` otomatis dianggap sebagai dependency project.
 
 ## Storage Layer
 
@@ -179,9 +153,9 @@ Setiap developer mengerjakan model, service, storage, GUI, dan exception yang se
 
 ## Tutorial Setup untuk Developer
 
-## 1. Install Java 17
+## 1. Install Java
 
-Pastikan Java 17 sudah terinstall.
+Pastikan Java sudah terinstall.
 
 Cek versi Java:
 
@@ -189,8 +163,6 @@ Cek versi Java:
 java -version
 javac -version
 ```
-
-Output yang diharapkan harus menunjukkan versi 17.
 
 ## 2. Install Extension VS Code
 
@@ -352,27 +324,45 @@ test
 
 ## 11. Jalankan Aplikasi
 
-Buat class entry point di package `main`, misalnya:
+Entry point aplikasi tersedia di:
 
 ```text
 src/main/Main.java
 ```
 
-Contoh struktur minimal:
+### Cara 1 - Lewat VS Code
 
-```java
-package main;
+1. Buka folder project `EVO` di VS Code.
+2. Pastikan extension Java sudah aktif.
+3. Buka file `src/main/Main.java`.
+4. Klik tombol `Run` di atas method `main`.
+5. GUI `EVO Login` akan muncul.
 
-public class Main {
-    public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            // Panggil frame utama aplikasi di sini
-        });
-    }
-}
+### Cara 2 - Lewat Terminal PowerShell
+
+Jalankan command berikut dari folder root project
+Compile semua file Java ke folder `out/`:
+
+```powershell
+javac -cp "lib/gson-2.10.1.jar" -d out (Get-ChildItem -Recurse -Filter *.java src | ForEach-Object { $_.FullName })
 ```
 
-Jalankan `Main.java` dari VS Code atau IDE.
+Jalankan aplikasi:
+
+```powershell
+java -cp "out;lib/gson-2.10.1.jar" main.Main
+```
+
+### Akun Login Default
+
+Jika `data/users.json` masih kosong, aplikasi otomatis membuat akun admin default saat pertama kali dibuka:
+
+```text
+username: admin
+password: admin123
+```
+
+Akun ini bisa dipakai untuk masuk ke menu Admin dan membuka fitur `User Management`.
 
 ## 12. Alur Kerja Developer
 
