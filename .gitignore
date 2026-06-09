@@ -1,3 +1,4 @@
 docs/
 AGENTS.md
-target/
+*.class
+out/

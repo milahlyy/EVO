@@ -9,8 +9,8 @@ Project ini dibuat untuk tugas kuliah Object-Oriented Programming, jadi fokus ut
 - Java 17
 - Java Swing
 - JSON File Storage
-- Gson untuk serialization dan deserialization JSON
-- Maven untuk dependency management
+- Gson `.jar` untuk serialization dan deserialization JSON
+- VS Code Java project settings
 
 ## Fokus Project
 
@@ -41,6 +41,8 @@ GUI tidak boleh membaca atau menulis file JSON secara langsung. Semua akses data
 
 ```text
 EVO/
+|-- .vscode/
+|   `-- settings.json
 |-- data/
 |   |-- users.json
 |   |-- clients.json
@@ -49,6 +51,8 @@ EVO/
 |   `-- payments.json
 |-- docs/
 |   `-- PRD.md
+|-- lib/
+|   `-- gson-2.10.1.jar
 |-- src/
 |   |-- model/
 |   |-- service/
@@ -56,9 +60,10 @@ EVO/
 |   |-- gui/
 |   |-- util/
 |   |-- exception/
-|   `-- main/
-|-- README.md
-`-- pom.xml
+|   |-- main/
+|   `-- test/
+|-- AGENTS.md
+`-- README.md
 ```
 
 ## File Penyimpanan JSON
@@ -78,6 +83,38 @@ Setiap file berisi array JSON. Contoh isi awal:
 ```
 
 Setiap module harus membaca data dari file JSON saat aplikasi berjalan dan menyimpan ulang data setelah operasi tambah, ubah, atau hapus.
+
+## Dependency Gson
+
+Project ini memakai Gson dari file `.jar` di folder `lib/`.
+
+File yang digunakan:
+
+```text
+lib/gson-2.10.1.jar
+```
+
+Folder `lib/` harus ikut ada di project supaya semua anggota tim bisa langsung menjalankan aplikasi tanpa setup dependency tambahan.
+
+## Konfigurasi VS Code
+
+VS Code membaca semua `.jar` di folder `lib/` melalui file:
+
+```text
+.vscode/settings.json
+```
+
+Isi konfigurasi:
+
+```json
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar"
+    ]
+}
+```
+
+Artinya, semua file `.jar` di dalam folder `lib/` otomatis dianggap sebagai dependency project.
 
 ## Storage Layer
 
@@ -155,7 +192,15 @@ javac -version
 
 Output yang diharapkan harus menunjukkan versi 17.
 
-## 2. Clone atau Buka Project
+## 2. Install Extension VS Code
+
+Jika memakai VS Code, install extension berikut:
+
+- Extension Pack for Java
+
+Extension ini sudah cukup untuk menjalankan project Java Swing dan membaca konfigurasi library dari `.vscode/settings.json`.
+
+## 3. Clone atau Buka Project
 
 Jika memakai Git:
 
@@ -164,56 +209,115 @@ git clone <url-repository>
 cd EVO
 ```
 
-Jika project sudah ada di komputer, langsung buka folder `EVO` menggunakan IDE seperti IntelliJ IDEA, NetBeans, Eclipse, atau VS Code.
+Jika project sudah ada di komputer, langsung buka folder `EVO` menggunakan VS Code atau IDE Java lain.
 
-## 3. Install Maven
+## 4. Pastikan Gson Ada di Folder Lib
 
-Project ini direkomendasikan memakai Maven supaya dependency Gson otomatis terpasang di semua komputer anggota tim.
+Pastikan file Gson ada di:
 
-Cek apakah Maven sudah terinstall:
-
-```bash
-mvn -version
+```text
+lib/gson-2.10.1.jar
 ```
 
-Jika belum ada, install Maven terlebih dahulu
+Jika file ini belum ada, download Gson `.jar`, lalu simpan ke folder `lib/`.
 
-Untuk VS Code, extension yang disarankan:
+## 5. Pastikan VS Code Membaca JAR
 
-- Extension Pack for Java
-- Maven for Java
+Pastikan file berikut ada:
 
-## 4. Dependency Gson
-
-Dependency Gson sudah tersedia di `pom.xml`:
-
-```xml
-<dependency>
-    <groupId>com.google.code.gson</groupId>
-    <artifactId>gson</artifactId>
-    <version>2.13.1</version>
-</dependency>
+```text
+.vscode/settings.json
 ```
 
-## 5. Download Dependency
+Dengan isi:
 
-Jalankan command ini dari root project:
-
-```bash
-mvn dependency:resolve
+```json
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar"
+    ]
+}
 ```
 
-Di VS Code, biasanya dependency akan otomatis dibaca setelah `pom.xml` terdeteksi. Jika belum, buka Command Palette lalu pilih reload Java project.
+## 6. Reload Java Language Server
 
-Langkah di VS Code:
+Setelah menambahkan `.jar` atau mengubah settings:
 
-1. Buka folder `EVO`.
-2. Pastikan file `pom.xml` muncul di root project.
-3. Tunggu proses Java project import selesai.
-4. Buka tab Maven di sidebar.
-5. Jika dependency belum terbaca, klik reload project.
+1. Tekan `Ctrl + Shift + P`.
+2. Cari `Java: Clean Java Language Server Workspace`.
+3. Klik command tersebut.
+4. Pilih reload/restart saat diminta.
 
-## 6. Pastikan Folder Data Ada
+Langkah ini membuat VS Code membaca ulang dependency dari folder `lib/`.
+
+## 7. Test Gson
+
+File test tersedia di:
+
+```text
+src/test/GsonTest.java
+```
+
+Isi test:
+
+```java
+package test;
+
+import com.google.gson.Gson;
+
+public class GsonTest {
+    public static void main(String[] args) {
+        Gson gson = new Gson();
+        String json = gson.toJson("Hello EVO");
+        System.out.println(json);
+    }
+}
+```
+
+Jalankan `GsonTest.java`. Jika output:
+
+```text
+"Hello EVO"
+```
+
+berarti Gson sudah berhasil terbaca.
+
+## 8. Contoh Gson untuk EVO
+
+Contoh model:
+
+```java
+public class Client {
+    private String name;
+
+    public Client(String name) {
+        this.name = name;
+    }
+}
+```
+
+Contoh convert object ke JSON:
+
+```java
+import com.google.gson.Gson;
+
+public class Test {
+    public static void main(String[] args) {
+        Client client = new Client("Mila");
+        Gson gson = new Gson();
+        String json = gson.toJson(client);
+        System.out.println(json);
+    }
+}
+```
+
+Output:
+
+```json
+{"name":"Mila"}
+```
+
+## 9. Pastikan Folder Data Ada
 
 Pastikan folder `data/` berisi file berikut:
 
@@ -231,7 +335,7 @@ Jika file belum ada, buat file tersebut dan isi dengan:
 []
 ```
 
-## 7. Buat Package Utama
+## 10. Buat Package Utama
 
 Pastikan package berikut tersedia di dalam `src/`:
 
@@ -243,9 +347,10 @@ gui
 util
 exception
 main
+test
 ```
 
-## 8. Jalankan Aplikasi
+## 11. Jalankan Aplikasi
 
 Buat class entry point di package `main`, misalnya:
 
@@ -267,31 +372,9 @@ public class Main {
 }
 ```
 
-Jalankan `Main.java` dari IDE.
+Jalankan `Main.java` dari VS Code atau IDE.
 
-Atau jalankan lewat Maven:
-
-```bash
-mvn compile exec:java
-```
-
-## 9. Build Project
-
-Untuk memastikan semua source code berhasil dikompilasi:
-
-```bash
-mvn compile
-```
-
-Untuk membuat hasil build:
-
-```bash
-mvn package
-```
-
-Hasil build akan masuk ke folder `target/`.
-
-## 10. Alur Kerja Developer
+## 12. Alur Kerja Developer
 
 Saat membuat fitur baru, ikuti urutan ini:
 
@@ -303,7 +386,7 @@ Saat membuat fitur baru, ikuti urutan ini:
 6. Test fitur melalui GUI.
 7. Pastikan file JSON berubah setelah create, update, atau delete.
 
-## 11. Contoh Alur Fitur
+## 13. Contoh Alur Fitur
 
 Contoh saat menambah client:
 
@@ -328,5 +411,4 @@ Urutan proses:
 - GUI tidak boleh mengakses file JSON secara langsung.
 - Service layer menangani business logic.
 - Storage layer menangani file I/O saja.
-- Gunakan Gson untuk serialization dan deserialization.
-- Gunakan Maven untuk mengelola dependency project.
+- Gunakan Gson dari file `.jar` di folder `lib/`.
