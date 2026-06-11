@@ -30,6 +30,10 @@ public class StaffDashboardFrame extends JFrame {
         JPanel panel = new JPanel(new GridLayout(2, 1, 10, 10));
         panel.add(new JLabel("Menu staff akan diisi oleh module developer lain.", SwingConstants.CENTER));
 
+        JButton manageClientsButton = new JButton("Client Management");
+        manageClientsButton.addActionListener(event -> new ClientManagementFrame().setVisible(true));
+        panel.add(manageClientsButton);
+
         JButton logoutButton = new JButton("Logout");
         logoutButton.addActionListener(event -> logout());
         panel.add(logoutButton);

@@ -32,15 +32,19 @@ public class AdminDashboardFrame extends JFrame {
         titleLabel.setFont(titleLabel.getFont().deriveFont(18f));
         add(titleLabel, BorderLayout.NORTH);
 
-        JPanel menuPanel = new JPanel(new GridLayout(2, 1, 10, 10));
+        JPanel menuPanel = new JPanel(new GridLayout(3, 1, 10, 10));
 
         JButton manageUsersButton = new JButton("User Management");
         manageUsersButton.addActionListener(event -> new UserManagementFrame(userService).setVisible(true));
+
+        JButton manageClientsButton = new JButton("Client Management");
+        manageClientsButton.addActionListener(event -> new ClientManagementFrame().setVisible(true));
 
         JButton logoutButton = new JButton("Logout");
         logoutButton.addActionListener(event -> logout());
 
         menuPanel.add(manageUsersButton);
+        menuPanel.add(manageClientsButton);
         menuPanel.add(logoutButton);
 
         add(menuPanel, BorderLayout.CENTER);
