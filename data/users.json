@@ -5,5 +5,19 @@
     "password": "admin123",
     "fullName": "Default Admin",
     "role": "Admin"
+  },
+  {
+    "id": "38915863-3745-4fa5-95f8-4cacac53288e",
+    "username": "mila",
+    "password": "milahly",
+    "fullName": "kamila",
+    "role": "Staff"
+  },
+  {
+    "id": "b6349d58-76ca-41ef-b92b-4386b4140e44",
+    "username": "wike",
+    "password": "wike123",
+    "fullName": "wike mawar",
+    "role": "Admin"
   }
 ]
