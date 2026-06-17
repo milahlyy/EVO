@@ -16,13 +16,11 @@ public class AdminDashboardFrame extends JFrame {
 
     public AdminDashboardFrame(UserService userService) {
         this.userService = userService;
-
         setTitle("EVO Admin Dashboard");
-        setSize(480, 260);
+        setSize(480, 320); // dinaikin dari 260 biar 4 tombol muat
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
-
         initComponents();
     }
 
@@ -32,7 +30,7 @@ public class AdminDashboardFrame extends JFrame {
         titleLabel.setFont(titleLabel.getFont().deriveFont(18f));
         add(titleLabel, BorderLayout.NORTH);
 
-        JPanel menuPanel = new JPanel(new GridLayout(3, 1, 10, 10));
+        JPanel menuPanel = new JPanel(new GridLayout(4, 1, 10, 10)); // dari 3 -> 4
 
         JButton manageUsersButton = new JButton("User Management");
         manageUsersButton.addActionListener(event -> new UserManagementFrame(userService).setVisible(true));
@@ -40,13 +38,16 @@ public class AdminDashboardFrame extends JFrame {
         JButton manageClientsButton = new JButton("Client Management");
         manageClientsButton.addActionListener(event -> new ClientManagementFrame().setVisible(true));
 
+        JButton manageVendorsButton = new JButton("Vendor Management"); // <-- BARU
+        manageVendorsButton.addActionListener(event -> new VendorManagementFrame().setVisible(true));
+
         JButton logoutButton = new JButton("Logout");
         logoutButton.addActionListener(event -> logout());
 
         menuPanel.add(manageUsersButton);
         menuPanel.add(manageClientsButton);
+        menuPanel.add(manageVendorsButton); // <-- taruh sebelum Logout
         menuPanel.add(logoutButton);
-
         add(menuPanel, BorderLayout.CENTER);
     }
 
