@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "packageType": "A",
+    "guestCount": 100,
+    "theme": "Superhero",
+    "withMagician": true,
+    "withCustomCake": false,
+    "id": "EVT-999",
+    "name": "Test Simpan JSON",
+    "clientId": "CLI-001",
+    "eventDate": "Jun 18, 2026, 1:12:19 AM",
+    "basePrice": 0.0
+  }
+]
