@@ -2,6 +2,7 @@ package gui;
 
 import exception.ValidationException;
 import exception.VendorException;
+import model.VenueVendor;
 import model.Vendor;
 import service.VendorService;
 
@@ -30,6 +31,8 @@ public class VendorManagementFrame extends JFrame {
     private JTextField addressField;
     private JComboBox<String> typeComboBox;
     private JTextField priceField;
+    private JTextField capacityField;
+    private JTextField facilitiesField;
 
     public VendorManagementFrame() {
         this.vendorService = new VendorService();
@@ -44,7 +47,7 @@ public class VendorManagementFrame extends JFrame {
 
     private void initComponents() {
         tableModel = new DefaultTableModel(
-                new Object[] {"ID", "Nama", "Kontak", "Alamat", "Tipe", "Harga Jasa", "Jml Event"}, 0) {
+                new Object[] {"ID", "Nama", "Kontak", "Alamat", "Tipe", "Harga Jasa", "Kapasitas", "Fasilitas", "Jml Event"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -62,8 +65,11 @@ public class VendorManagementFrame extends JFrame {
         nameField = new JTextField(16);
         contactField = new JTextField(16);
         addressField = new JTextField(16);
-        typeComboBox = new JComboBox<>(new String[] {"Catering", "Decoration", "Photography"});
+        typeComboBox = new JComboBox<>(new String[] {"Venue", "Catering", "Decoration", "Photography"});
         priceField = new JTextField(16);
+        capacityField = new JTextField(16);
+        facilitiesField = new JTextField(16);
+        typeComboBox.addActionListener(event -> updateVenueFields());
 
         addField(formPanel, gbc, 0, "Nama Vendor", nameField);
         addField(formPanel, gbc, 1, "Kontak", contactField);
@@ -77,6 +83,8 @@ public class VendorManagementFrame extends JFrame {
         formPanel.add(typeComboBox, gbc);
 
         addField(formPanel, gbc, 4, "Harga Jasa", priceField);
+        addField(formPanel, gbc, 5, "Kapasitas Venue", capacityField);
+        addField(formPanel, gbc, 6, "Fasilitas Venue", facilitiesField);
 
         JButton addButton = new JButton("Tambah");
         addButton.addActionListener(event -> addVendor());
@@ -90,22 +98,19 @@ public class VendorManagementFrame extends JFrame {
         JButton clearButton = new JButton("Clear");
         clearButton.addActionListener(event -> clearForm());
 
-        JButton assignButton = new JButton("Assign ke Event");
-        assignButton.addActionListener(event -> assignVendor());
-
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(addButton);
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(clearButton);
-        buttonPanel.add(assignButton);
 
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 7;
         gbc.gridwidth = 2;
         formPanel.add(buttonPanel, gbc);
 
         add(formPanel, BorderLayout.SOUTH);
+        updateVenueFields();
     }
 
     private void addField(JPanel panel, GridBagConstraints gbc, int row, String label, JTextField field) {
@@ -128,6 +133,8 @@ public class VendorManagementFrame extends JFrame {
                     vendor.getAddress(),
                     vendor.getType(),
                     formatPrice(vendor.getPrice()),
+                    getCapacityDisplay(vendor),
+                    getFacilitiesDisplay(vendor),
                     vendor.getEventIds().size()
             });
         }
@@ -148,11 +155,21 @@ public class VendorManagementFrame extends JFrame {
         addressField.setText(vendor.getAddress());
         typeComboBox.setSelectedItem(vendor.getType());
         priceField.setText(formatPrice(vendor.getPrice()));
+        if (vendor instanceof VenueVendor) {
+            VenueVendor venue = (VenueVendor) vendor;
+            capacityField.setText(String.valueOf(venue.getCapacity()));
+            facilitiesField.setText(venue.getFacilities());
+        } else {
+            capacityField.setText("");
+            facilitiesField.setText("");
+        }
+        updateVenueFields();
     }
 
     private void addVendor() {
         try {
-            vendorService.addVendor(getVendorName(), getContact(), getAddress(), getVendorType(), getPrice());
+            vendorService.addVendor(getVendorName(), getContact(), getAddress(), getVendorType(), getPrice(),
+                    getCapacity(), getFacilities());
             JOptionPane.showMessageDialog(this, "Vendor berhasil ditambahkan.");
             loadVendorTable();
             clearForm();
@@ -169,7 +186,8 @@ public class VendorManagementFrame extends JFrame {
             return;
         }
         try {
-            vendorService.updateVendor(selectedId, getVendorName(), getContact(), getAddress(), getVendorType(), getPrice());
+            vendorService.updateVendor(selectedId, getVendorName(), getContact(), getAddress(), getVendorType(), getPrice(),
+                    getCapacity(), getFacilities());
             JOptionPane.showMessageDialog(this, "Vendor berhasil diedit.");
             loadVendorTable();
             clearForm();
@@ -196,26 +214,6 @@ public class VendorManagementFrame extends JFrame {
             loadVendorTable();
             clearForm();
         } catch (VendorException e) {
-            showError(e);
-        }
-    }
-
-    private void assignVendor() {
-        String selectedId = getSelectedVendorId();
-        if (selectedId == null) {
-            JOptionPane.showMessageDialog(this, "Pilih vendor yang ingin di-assign.", "Validasi",
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        String eventId = JOptionPane.showInputDialog(this, "Masukkan ID Event:");
-        if (eventId == null) {
-            return; // dibatalkan
-        }
-        try {
-            vendorService.assignVendorToEvent(selectedId, eventId);
-            JOptionPane.showMessageDialog(this, "Vendor berhasil di-assign ke event.");
-            loadVendorTable();
-        } catch (ValidationException | VendorException e) {
             showError(e);
         }
     }
@@ -252,8 +250,47 @@ public class VendorManagementFrame extends JFrame {
         }
     }
 
+    private int getCapacity() throws ValidationException {
+        if (!"Venue".equalsIgnoreCase(getVendorType())) {
+            return 0;
+        }
+        try {
+            return Integer.parseInt(capacityField.getText().trim());
+        } catch (NumberFormatException e) {
+            throw new ValidationException("Kapasitas venue harus berupa angka.");
+        }
+    }
+
+    private String getFacilities() {
+        return facilitiesField.getText();
+    }
+
     private String formatPrice(double price) {
         return String.format("%.0f", price); // hindari format 1.5E7
+    }
+
+    private String getCapacityDisplay(Vendor vendor) {
+        if (vendor instanceof VenueVendor) {
+            return String.valueOf(((VenueVendor) vendor).getCapacity());
+        }
+        return "-";
+    }
+
+    private String getFacilitiesDisplay(Vendor vendor) {
+        if (vendor instanceof VenueVendor) {
+            return ((VenueVendor) vendor).getFacilities();
+        }
+        return "-";
+    }
+
+    private void updateVenueFields() {
+        boolean isVenue = "Venue".equalsIgnoreCase(getVendorType());
+        capacityField.setEnabled(isVenue);
+        facilitiesField.setEnabled(isVenue);
+        if (!isVenue) {
+            capacityField.setText("");
+            facilitiesField.setText("");
+        }
     }
 
     private void clearForm() {
@@ -263,6 +300,9 @@ public class VendorManagementFrame extends JFrame {
         addressField.setText("");
         typeComboBox.setSelectedIndex(0);
         priceField.setText("");
+        capacityField.setText("");
+        facilitiesField.setText("");
+        updateVenueFields();
     }
 
     private void showError(Exception e) {

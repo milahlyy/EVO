@@ -26,7 +26,7 @@ public class StaffDashboardFrame extends JFrame {
         titleLabel.setFont(titleLabel.getFont().deriveFont(18f));
         add(titleLabel, BorderLayout.NORTH);
 
-        JPanel panel = new JPanel(new GridLayout(3, 1, 10, 10)); // Client, Vendor, Logout
+        JPanel panel = new JPanel(new GridLayout(4, 1, 10, 10));
 
         JButton manageClientsButton = new JButton("Client Management");
         manageClientsButton.addActionListener(event -> new ClientManagementFrame().setVisible(true));

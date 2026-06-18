@@ -1,14 +1,24 @@
 [
   {
-    "packageType": "A",
-    "guestCount": 100,
     "theme": "Superhero",
-    "withMagician": true,
-    "withCustomCake": false,
+    "guestCount": 100,
     "id": "EVT-999",
     "name": "Test Simpan JSON",
     "clientId": "CLI-001",
     "eventDate": "Jun 18, 2026, 1:12:19 AM",
-    "basePrice": 0.0
+    "basePrice": 0.0,
+    "eventType": "Birthday"
+  },
+  {
+    "guestCount": 50,
+    "cateringCapacity": 100,
+    "decorationConcept": "beach",
+    "id": "1989",
+    "name": "wedding of mawar",
+    "clientId": "baa2606e-1e35-49e9-8685-9da552ec1e58",
+    "eventDate": "Jul 18, 2026, 12:00:00 AM",
+    "status": "Planned",
+    "basePrice": 1.5E7,
+    "eventType": "Wedding"
   }
 ]

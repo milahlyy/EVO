@@ -166,12 +166,13 @@ src/storage/
 ## EventStorage
 
 - Reads and writes `events.json`.
-- Persists `WeddingEvent`, `SeminarEvent`, and `BirthdayEvent` data.
+- Persists `PersonalEvent`, `CorporateEvent`, and `PublicEvent` data.
+- Stores an explicit event category so event subclasses can be restored safely.
 
 ## VendorStorage
 
 - Reads and writes `vendors.json`.
-- Persists `CateringVendor`, `DecorationVendor`, and `PhotographyVendor` data.
+- Persists `VenueVendor`, `CateringVendor`, `DecorationVendor`, and `PhotographyVendor` data.
 
 ## PaymentStorage
 
@@ -242,34 +243,58 @@ src/storage/
 - Delete event
 - View event details
 - Assign client to event
-- Calculate event budget
+- Assign and remove vendors from event
+- Calculate planning fee and final event budget
 
-### Event Types
+### Event Categories
 
-## WeddingEvent
+## PersonalEvent
 
-- Package
-- Catering capacity
-- Decoration option
+- Used for private or personal events such as weddings, birthdays, anniversaries, and family gatherings.
+- Uses `calculateBudget()` for lighter personal-event coordination fees.
 
-## SeminarEvent
+## CorporateEvent
 
-- Topic
-- Speaker count
-- Participant count
+- Used for company or organizational events such as seminars, meetings, product launches, and company gatherings.
+- Uses `calculateBudget()` for corporate coordination fees.
 
-## BirthdayEvent
+## PublicEvent
 
-- Theme
-- Entertainment option
-- Guest count
+- Used for open/public events such as concerts, bazaars, festivals, and exhibitions.
+- Uses `calculateBudget()` for higher public-event coordination fees.
+
+### Event Detail Fields
+
+- Event category: `Personal`, `Corporate`, or `Public`
+- Event type: free text, for example `Wedding`, `Seminar`, `Concert`, `Gathering`, or `Bazaar`
+- Expected attendance
+- Event concept
+- Special request
+
+### Budget Rules
+
+- `event.calculateBudget()` calculates the internal event planning or coordination fee.
+- Final event budget is calculated by `EventService.calculateTotalBudget(eventId)`.
+- Final event budget = event planning fee + total price of assigned vendors.
+- Venue rental is included through assigned `VenueVendor`.
+- Event management must not use fixed package A-E or addon calculator logic.
+- Wedding, seminar, birthday, concert, and similar names are examples of event type text, not required subclasses.
+
+### Assignment Rules
+
+- Event must be assigned to an existing client.
+- Vendors are assigned from the Event Management screen.
+- Only one venue can be assigned to one event.
+- The same venue cannot be assigned to two events on the same date.
+- Numeric event fields cannot be negative.
+- Required event detail fields must be filled.
 
 ### Classes
 
 - `Event` abstract class
-- `WeddingEvent`
-- `SeminarEvent`
-- `BirthdayEvent`
+- `PersonalEvent`
+- `CorporateEvent`
+- `PublicEvent`
 - `EventService`
 - `EventStorage`
 - `EventException`
@@ -290,18 +315,26 @@ src/storage/
 - Update vendor
 - Delete vendor
 - Search vendor
-- Assign vendor to event
-- Remove vendor assignment
+- View vendor assignment count
+- Provide vendor data for event assignment
 
 ### Vendor Types
 
+- `VenueVendor`
 - `CateringVendor`
 - `DecorationVendor`
 - `PhotographyVendor`
 
+### VenueVendor
+
+- Capacity
+- Facilities
+- Rental price
+
 ### Classes
 
 - `Vendor`
+- `VenueVendor`
 - `CateringVendor`
 - `DecorationVendor`
 - `PhotographyVendor`
@@ -313,6 +346,12 @@ src/storage/
 - Encapsulation through private vendor fields.
 - Inheritance through vendor subclasses.
 - Polymorphism through vendor-specific pricing or service descriptions.
+
+### Relationship With Event Management
+
+- Vendor Management owns vendor/provider CRUD.
+- Event Management owns assigning and removing vendors for a selected event.
+- Vendor assignment is persisted through vendor event IDs.
 
 ---
 
@@ -421,7 +460,7 @@ Each developer must implement model classes, service classes, storage classes, G
 
 ## Developer 3: Event Management
 
-- `Event`, `WeddingEvent`, `SeminarEvent`, `BirthdayEvent`
+- `Event`, `PersonalEvent`, `CorporateEvent`, `PublicEvent`
 - `EventService`
 - `EventStorage`
 - Event management screens
@@ -429,7 +468,7 @@ Each developer must implement model classes, service classes, storage classes, G
 
 ## Developer 4: Vendor Management
 
-- `Vendor`, `CateringVendor`, `DecorationVendor`, `PhotographyVendor`
+- `Vendor`, `VenueVendor`, `CateringVendor`, `DecorationVendor`, `PhotographyVendor`
 - `VendorService`
 - `VendorStorage`
 - Vendor management screens
@@ -501,8 +540,8 @@ Each developer must implement model classes, service classes, storage classes, G
 ## Inheritance
 
 - `User -> Admin, Staff`
-- `Event -> WeddingEvent, SeminarEvent, BirthdayEvent`
-- `Vendor -> CateringVendor, DecorationVendor, PhotographyVendor`
+- `Event -> PersonalEvent, CorporateEvent, PublicEvent`
+- `Vendor -> VenueVendor, CateringVendor, DecorationVendor, PhotographyVendor`
 - `Payment -> CashPayment, TransferPayment, EWalletPayment`
 
 ## Abstraction
@@ -513,6 +552,7 @@ Each developer must implement model classes, service classes, storage classes, G
 ## Polymorphism
 
 - `calculateBudget()`
+- Vendor-specific service descriptions and pricing behavior
 - `processPayment()`
 - `generateInvoice()`
 
