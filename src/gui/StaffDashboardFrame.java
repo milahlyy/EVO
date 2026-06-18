@@ -1,14 +1,13 @@
 package gui;
 
-import util.SessionManager;
-
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import util.SessionManager;
 
 public class StaffDashboardFrame extends JFrame {
 
@@ -36,6 +35,10 @@ public class StaffDashboardFrame extends JFrame {
         JButton manageVendorsButton = new JButton("Vendor Management"); // <-- BARU
         manageVendorsButton.addActionListener(event -> new VendorManagementFrame().setVisible(true));
         panel.add(manageVendorsButton);
+
+        JButton manageEventsButton = new JButton("Event Management"); // <-- BARU
+        manageEventsButton.addActionListener(event -> new EventManagementFrame().setVisible(true));
+        panel.add(manageEventsButton);
 
         JButton logoutButton = new JButton("Logout");
         logoutButton.addActionListener(event -> logout());
