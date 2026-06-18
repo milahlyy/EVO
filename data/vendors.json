@@ -1,1 +1,29 @@
-[]
+[
+    {
+    "id": "v-0001",
+    "name": "Teazzi Catering",
+    "contact": "081234435665",
+    "address": "Jl. Melati No. 10, Jakarta",
+    "type": "Catering",
+    "price": 15000000.0,
+    "eventIds": []
+    },
+    {
+    "id": "v-0002",
+    "name": "Indomie Catering",
+    "contact": "082233445566",
+    "address": "Jl. Anggrek No. 22, Jakarta",
+    "type": "Catering",
+    "price": 8000000.0,
+    "eventIds": []
+    },
+    {
+    "id": "v-0003",
+    "name": "Kartika Decorations",
+    "contact": "081122334455",
+    "address": "Jl. Mawar No. 5, Jakarta",
+    "type": "Decoration",
+    "price": 12000000.0,
+    "eventIds": []
+    }
+]

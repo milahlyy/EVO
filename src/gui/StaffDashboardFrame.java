@@ -11,13 +11,13 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
 public class StaffDashboardFrame extends JFrame {
+
     public StaffDashboardFrame() {
         setTitle("EVO Staff Dashboard");
-        setSize(480, 240);
+        setSize(480, 300);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
-
         initComponents();
     }
 
@@ -27,12 +27,15 @@ public class StaffDashboardFrame extends JFrame {
         titleLabel.setFont(titleLabel.getFont().deriveFont(18f));
         add(titleLabel, BorderLayout.NORTH);
 
-        JPanel panel = new JPanel(new GridLayout(2, 1, 10, 10));
-        panel.add(new JLabel("Menu staff akan diisi oleh module developer lain.", SwingConstants.CENTER));
+        JPanel panel = new JPanel(new GridLayout(3, 1, 10, 10)); // Client, Vendor, Logout
 
         JButton manageClientsButton = new JButton("Client Management");
         manageClientsButton.addActionListener(event -> new ClientManagementFrame().setVisible(true));
         panel.add(manageClientsButton);
+
+        JButton manageVendorsButton = new JButton("Vendor Management"); // <-- BARU
+        manageVendorsButton.addActionListener(event -> new VendorManagementFrame().setVisible(true));
+        panel.add(manageVendorsButton);
 
         JButton logoutButton = new JButton("Logout");
         logoutButton.addActionListener(event -> logout());
