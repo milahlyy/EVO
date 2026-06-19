@@ -26,7 +26,7 @@ public class StaffDashboardFrame extends JFrame {
         titleLabel.setFont(titleLabel.getFont().deriveFont(18f));
         add(titleLabel, BorderLayout.NORTH);
 
-        JPanel panel = new JPanel(new GridLayout(4, 1, 10, 10));
+        JPanel panel = new JPanel(new GridLayout(5, 1, 10, 10));
 
         JButton manageClientsButton = new JButton("Client Management");
         manageClientsButton.addActionListener(event -> new ClientManagementFrame().setVisible(true));
@@ -39,6 +39,10 @@ public class StaffDashboardFrame extends JFrame {
         JButton manageEventsButton = new JButton("Event Management"); // <-- BARU
         manageEventsButton.addActionListener(event -> new EventManagementFrame().setVisible(true));
         panel.add(manageEventsButton);
+
+        JButton managePaymentsButton = new JButton("Payment Management");
+        managePaymentsButton.addActionListener(event -> new PaymentManagementFrame().setVisible(true));
+        panel.add(managePaymentsButton);
 
         JButton logoutButton = new JButton("Logout");
         logoutButton.addActionListener(event -> logout());

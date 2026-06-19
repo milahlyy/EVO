@@ -1,0 +1,166 @@
+package service;
+
+import exception.PaymentException;
+import model.CashPayment;
+import model.EWalletPayment;
+import model.Event;
+import model.Payment;
+import model.TransferPayment;
+import storage.PaymentStorage;
+
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+public class PaymentService {
+    private final PaymentStorage storage;
+    private final EventService eventService;
+    private List<Payment> paymentList;
+
+    public PaymentService() {
+        this.storage = new PaymentStorage();
+        this.eventService = new EventService();
+        this.paymentList = storage.loadPayments();
+    }
+
+    public List<Payment> getAllPayments() {
+        return paymentList;
+    }
+
+    public Payment getPaymentById(String id) {
+        for (Payment payment : paymentList) {
+            if (payment.getId().equals(id)) {
+                return payment;
+            }
+        }
+        return null;
+    }
+
+    public void addPayment(String eventId, double amount, String method, String detailOne, String detailTwo)
+            throws PaymentException {
+        validatePaymentInput(eventId, amount, method, detailOne, detailTwo);
+
+        String id = "PAY-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        Payment payment;
+
+        if ("Cash".equalsIgnoreCase(method)) {
+            payment = new CashPayment(id, eventId.trim(), amount, new Date(), "Pending", detailOne.trim());
+        } else if ("Transfer".equalsIgnoreCase(method)) {
+            payment = new TransferPayment(id, eventId.trim(), amount, new Date(), "Pending",
+                    detailOne.trim(), detailTwo.trim());
+        } else {
+            payment = new EWalletPayment(id, eventId.trim(), amount, new Date(), "Pending",
+                    detailOne.trim(), detailTwo.trim());
+        }
+
+        paymentList.add(payment);
+        storage.savePayments(paymentList);
+    }
+
+    public void processPayment(String paymentId) throws PaymentException {
+        Payment payment = getPaymentById(paymentId);
+
+        if (payment == null) {
+            throw new PaymentException("Payment tidak ditemukan.");
+        }
+
+        if ("Paid".equalsIgnoreCase(payment.getStatus())) {
+            throw new PaymentException("Payment ini sudah diproses.");
+        }
+
+        payment.processPayment();
+        storage.savePayments(paymentList);
+    }
+
+    public void deletePayment(String paymentId) throws PaymentException {
+        Payment payment = getPaymentById(paymentId);
+
+        if (payment == null) {
+            throw new PaymentException("Payment tidak ditemukan.");
+        }
+
+        paymentList.remove(payment);
+        storage.savePayments(paymentList);
+    }
+
+    public String generateInvoice(String paymentId) throws PaymentException {
+        Payment payment = getPaymentById(paymentId);
+
+        if (payment == null) {
+            throw new PaymentException("Payment tidak ditemukan.");
+        }
+
+        return payment.generateInvoice();
+    }
+
+    public double calculateTotalRevenue() {
+        double total = 0;
+
+        for (Payment payment : paymentList) {
+            if ("Paid".equalsIgnoreCase(payment.getStatus())) {
+                total += payment.getAmount();
+            }
+        }
+
+        return total;
+    }
+
+    public int countPaidPayments() {
+        int total = 0;
+
+        for (Payment payment : paymentList) {
+            if ("Paid".equalsIgnoreCase(payment.getStatus())) {
+                total++;
+            }
+        }
+
+        return total;
+    }
+
+    public int countPendingPayments() {
+        int total = 0;
+
+        for (Payment payment : paymentList) {
+            if ("Pending".equalsIgnoreCase(payment.getStatus())) {
+                total++;
+            }
+        }
+
+        return total;
+    }
+
+    private void validatePaymentInput(String eventId, double amount, String method, String detailOne, String detailTwo)
+            throws PaymentException {
+        if (eventId == null || eventId.trim().isEmpty()) {
+            throw new PaymentException("Event ID tidak boleh kosong.");
+        }
+
+        Event event = eventService.getEventById(eventId.trim());
+        if (event == null) {
+            throw new PaymentException("Event dengan ID '" + eventId + "' tidak ditemukan.");
+        }
+
+        if (amount <= 0) {
+            throw new PaymentException("Jumlah pembayaran harus lebih dari 0.");
+        }
+
+        if (method == null || method.trim().isEmpty()) {
+            throw new PaymentException("Metode pembayaran wajib dipilih.");
+        }
+
+        if (detailOne == null || detailOne.trim().isEmpty()) {
+            throw new PaymentException("Detail pembayaran pertama wajib diisi.");
+        }
+
+        if (!"Cash".equalsIgnoreCase(method)
+                && !"Transfer".equalsIgnoreCase(method)
+                && !"E-Wallet".equalsIgnoreCase(method)) {
+            throw new PaymentException("Metode pembayaran tidak valid.");
+        }
+
+        if (!"Cash".equalsIgnoreCase(method)
+                && (detailTwo == null || detailTwo.trim().isEmpty())) {
+            throw new PaymentException("Detail pembayaran kedua wajib diisi.");
+        }
+    }
+}
