@@ -5,5 +5,33 @@
     "email": "mawar@gmail.com",
     "phone": "08999123456",
     "address": "jatiasih"
+  },
+  {
+    "id": "993c4e1e-8d5b-485f-ac8f-b959ea60d109",
+    "name": "PT Synexa Global Indonesia",
+    "email": "synexaglobalid@synexa.com",
+    "phone": "08598743241",
+    "address": "Jakarta Selatan"
+  },
+  {
+    "id": "249abf42-9d2b-49bc-8d08-d7d7c2539ddd",
+    "name": "Jennifer Coppen",
+    "email": "jennifer1298@gmail.com",
+    "phone": "087587933412",
+    "address": "Bali"
+  },
+  {
+    "id": "2b0d3e0a-23fa-4939-960c-f0276fb919e7",
+    "name": "El Rumi",
+    "email": "elele2341@gmail.com",
+    "phone": "081234567893",
+    "address": "Jakarta Selatan"
+  },
+  {
+    "id": "f199e332-93ad-4bfa-becd-dba7f0e3d0d0",
+    "name": "Kamila",
+    "email": "mila1905@gmail.com",
+    "phone": "081234567896",
+    "address": "Jakarta Pusat"
   }
 ]
