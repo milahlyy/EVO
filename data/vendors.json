@@ -29,5 +29,45 @@
     "type": "Decoration",
     "price": 1.2E7,
     "eventIds": []
+  },
+  {
+    "id": "v-0004",
+    "name": "Ruang Tatap",
+    "contact": "088876512853",
+    "address": "Jl. Tulip No 32, Jakarta",
+    "type": "Photography",
+    "price": 2300000.0,
+    "eventIds": []
+  },
+  {
+    "id": "v-005",
+    "name": "Photomotion",
+    "contact": "087412219596",
+    "address": "Jl. Bougenville No 10, Jakarta",
+    "type": "Photography",
+    "price": 2500000.0,
+    "eventIds": []
+  },
+  {
+    "capacity": 1000,
+    "facilities": "AC sentral, kursi dengan sarung kain, sound system, kamar rias, parkir luas, genset",
+    "id": "v-006",
+    "name": "Whistler Garden",
+    "contact": "082156473231",
+    "address": "Jl. Dahlia No. 25, Jakarta",
+    "type": "Venue",
+    "price": 3.7E7,
+    "eventIds": []
+  },
+  {
+    "capacity": 700,
+    "facilities": "AC, Kursi dengan sarung, Panggung, Sound System, Aula kosong dan bersih",
+    "id": "v-007",
+    "name": "Gedung Candra Kencana",
+    "contact": "081245587120",
+    "address": "Jl. Lavender No. 12, Jakarta",
+    "type": "Venue",
+    "price": 1.4E7,
+    "eventIds": []
   }
 ]
