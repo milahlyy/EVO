@@ -1,11 +1,28 @@
 [
   {
+    "walletProvider": "Alya E-Wallet",
+    "phoneNumber": "0812787654",
     "id": "PAY-0001",
     "eventId": "EVT-0002",
-    "amount": 15000000.0,
-    "paymentDate": "Jun 24, 2026, 12:16:51 PM",
-    "status": "Pending",
-    "walletProvider": "Alya E-Wallet",
-    "phoneNumber": "0812787654"
+    "amount": 1.5E7,
+    "paymentDate": "Jun 24, 2026, 12:16:51 PM",
+    "status": "Pending"
+  },
+  {
+    "bankName": "amex",
+    "accountNumber": "077777777777",
+    "id": "PAY-0002",
+    "eventId": "EVT-0003",
+    "amount": 3.0E7,
+    "paymentDate": "Jun 24, 2026, 2:26:30 PM",
+    "status": "Paid"
+  },
+  {
+    "receivedBy": "nadine",
+    "id": "PAY-0003",
+    "eventId": "EVT-0003",
+    "amount": 8.08E7,
+    "paymentDate": "Jun 24, 2026, 2:28:28 PM",
+    "status": "Paid"
   }
 ]

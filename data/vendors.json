@@ -5,7 +5,7 @@
     "contact": "081234435665",
     "address": "Jl. Melati No. 10, Jakarta",
     "type": "Catering",
-    "price": 15000000.0,
+    "price": 1.5E7,
     "eventIds": [
       "EVT-0002"
     ]
@@ -18,7 +18,8 @@
     "type": "Catering",
     "price": 8000000.0,
     "eventIds": [
-      "EVT-0002"
+      "EVT-0002",
+      "EVT-0003"
     ]
   },
   {
@@ -27,8 +28,10 @@
     "contact": "081122334455",
     "address": "Jl. Mawar No. 5, Jakarta",
     "type": "Decoration",
-    "price": 12000000.0,
-    "eventIds": []
+    "price": 1.2E7,
+    "eventIds": [
+      "EVT-0003"
+    ]
   },
   {
     "id": "VEN-0004",
@@ -37,7 +40,9 @@
     "address": "Jl. Tulip No. 32, Jakarta",
     "type": "Photography",
     "price": 2300000.0,
-    "eventIds": []
+    "eventIds": [
+      "EVT-0003"
+    ]
   },
   {
     "id": "VEN-0005",
@@ -49,25 +54,29 @@
     "eventIds": []
   },
   {
+    "capacity": 1000,
+    "facilities": "AC sentral, kursi dengan sarung kain, sound system, kamar rias, parkir luas, genset",
     "id": "VEN-0006",
     "name": "Whistler Garden",
     "contact": "082156473231",
     "address": "Jl. Dahlia No. 25, Jakarta",
     "type": "Venue",
-    "price": 37000000.0,
-    "capacity": 1000,
-    "facilities": "AC sentral, kursi dengan sarung kain, sound system, kamar rias, parkir luas, genset",
-    "eventIds": []
+    "price": 3.7E7,
+    "eventIds": [
+      "EVT-0003"
+    ]
   },
   {
+    "capacity": 700,
+    "facilities": "AC, kursi dengan sarung, panggung, sound system, aula kosong dan bersih",
     "id": "VEN-0007",
     "name": "Gedung Candra Kencana",
     "contact": "081245587120",
     "address": "Jl. Lavender No. 12, Jakarta",
     "type": "Venue",
-    "price": 14000000.0,
-    "capacity": 700,
-    "facilities": "AC, kursi dengan sarung, panggung, sound system, aula kosong dan bersih",
-    "eventIds": []
+    "price": 1.4E7,
+    "eventIds": [
+      "EVT-0002"
+    ]
   }
 ]

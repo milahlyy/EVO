@@ -3,7 +3,7 @@
     "id": "EVT-0001",
     "name": "Jennifer Birthday Celebration",
     "clientId": "CLI-0003",
-    "eventDate": "Jun 18, 2026, 1:12:19 AM",
+    "eventDate": "Jun 18, 2026, 1:12:19 AM",
     "status": "Planned",
     "eventType": "Birthday",
     "expectedAttendance": 100,
@@ -16,13 +16,26 @@
     "id": "EVT-0002",
     "name": "Mawar Wedding Celebration",
     "clientId": "CLI-0001",
-    "eventDate": "Jul 18, 2026, 12:00:00 AM",
+    "eventDate": "Jul 18, 2026, 12:00:00 AM",
     "status": "Planned",
     "eventType": "Wedding",
     "expectedAttendance": 100,
     "eventConcept": "Beach-inspired wedding decoration",
     "specialRequest": "Catering and photography support",
-    "basePrice": 15000000.0,
+    "basePrice": 1.5E7,
+    "eventCategory": "Personal"
+  },
+  {
+    "id": "EVT-0003",
+    "name": "yukari n geroge wedding",
+    "clientId": "CLI-0007",
+    "eventDate": "Jul 18, 2026, 12:00:00 AM",
+    "status": "Planned",
+    "eventType": "wedding",
+    "expectedAttendance": 100,
+    "eventConcept": "garden party",
+    "specialRequest": "",
+    "basePrice": 5.0E7,
     "eventCategory": "Personal"
   }
 ]
