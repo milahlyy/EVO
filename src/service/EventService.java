@@ -9,6 +9,7 @@ import model.PersonalEvent;
 import model.PublicEvent;
 import model.Vendor;
 import storage.EventStorage;
+import util.IdGenerator;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,6 +40,14 @@ public class EventService {
             }
         }
         return null;
+    }
+
+    public String generateNextEventId() {
+        List<String> ids = new ArrayList<>();
+        for (Event event : eventList) {
+            ids.add(event.getId());
+        }
+        return IdGenerator.generateNextId("EVT", ids);
     }
 
     public void addEvent(Event newEvent) throws EventException {

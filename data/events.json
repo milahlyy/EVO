@@ -1,24 +1,28 @@
 [
   {
-    "theme": "Superhero",
-    "guestCount": 100,
-    "id": "EVT-999",
-    "name": "Test Simpan JSON",
-    "clientId": "CLI-001",
-    "eventDate": "Jun 18, 2026, 1:12:19 AM",
+    "id": "EVT-0001",
+    "name": "Jennifer Birthday Celebration",
+    "clientId": "CLI-0003",
+    "eventDate": "Jun 18, 2026, 1:12:19 AM",
+    "status": "Planned",
+    "eventType": "Birthday",
+    "expectedAttendance": 100,
+    "eventConcept": "Superhero theme birthday celebration",
+    "specialRequest": "Kids entertainment and custom cake",
     "basePrice": 0.0,
-    "eventType": "Birthday"
+    "eventCategory": "Personal"
   },
   {
-    "guestCount": 50,
-    "cateringCapacity": 100,
-    "decorationConcept": "beach",
-    "id": "1989",
-    "name": "wedding of mawar",
-    "clientId": "baa2606e-1e35-49e9-8685-9da552ec1e58",
-    "eventDate": "Jul 18, 2026, 12:00:00 AM",
+    "id": "EVT-0002",
+    "name": "Mawar Wedding Celebration",
+    "clientId": "CLI-0001",
+    "eventDate": "Jul 18, 2026, 12:00:00 AM",
     "status": "Planned",
-    "basePrice": 1.5E7,
-    "eventType": "Wedding"
+    "eventType": "Wedding",
+    "expectedAttendance": 100,
+    "eventConcept": "Beach-inspired wedding decoration",
+    "specialRequest": "Catering and photography support",
+    "basePrice": 15000000.0,
+    "eventCategory": "Personal"
   }
 ]

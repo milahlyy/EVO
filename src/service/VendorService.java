@@ -9,12 +9,12 @@ import model.PhotographyVendor;
 import model.VenueVendor;
 import model.Vendor;
 import storage.VendorStorage;
+import util.IdGenerator;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class VendorService {
     private final VendorStorage vendorStorage;
@@ -50,10 +50,18 @@ public class VendorService {
         validateVendorInput(name, contact, address, type, price);
         validateVenueInput(type, capacity, facilities);
 
-        Vendor vendor = createVendorByType(UUID.randomUUID().toString(),
+        Vendor vendor = createVendorByType(generateNextVendorId(),
                 name.trim(), contact.trim(), address.trim(), type, price, capacity, facilities);
         vendors.add(vendor);
         vendorStorage.saveVendors(vendors);
+    }
+
+    public String generateNextVendorId() {
+        List<String> ids = new ArrayList<>();
+        for (Vendor vendor : vendors) {
+            ids.add(vendor.getId());
+        }
+        return IdGenerator.generateNextId("VEN", ids);
     }
 
     public void updateVendor(String id, String name, String contact, String address, String type, double price)

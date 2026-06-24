@@ -3,10 +3,10 @@ package service;
 import exception.ValidationException;
 import model.Client;
 import storage.ClientStorage;
+import util.IdGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class ClientService {
     private final ClientStorage clientStorage;
@@ -55,7 +55,7 @@ public class ClientService {
         validateClientInput(null, name, email, phone, address);
 
         Client client = new Client(
-                UUID.randomUUID().toString(),
+                generateNextClientId(),
                 name.trim(),
                 email.trim(),
                 phone.trim(),
@@ -63,6 +63,14 @@ public class ClientService {
 
         clients.add(client);
         clientStorage.saveClients(clients);
+    }
+
+    public String generateNextClientId() {
+        List<String> ids = new ArrayList<>();
+        for (Client client : clients) {
+            ids.add(client.getId());
+        }
+        return IdGenerator.generateNextId("CLI", ids);
     }
 
     public void updateClient(String id, String name, String email, String phone, String address)

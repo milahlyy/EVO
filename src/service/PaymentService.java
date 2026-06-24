@@ -8,10 +8,11 @@ import model.Event;
 import model.Payment;
 import model.TransferPayment;
 import storage.PaymentStorage;
+import util.IdGenerator;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class PaymentService {
     private final PaymentStorage storage;
@@ -45,7 +46,7 @@ public class PaymentService {
             throws PaymentException {
         validatePaymentInput(eventId, amount, method, detailOne, detailTwo);
 
-        String id = "PAY-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        String id = generateNextPaymentId();
         Payment payment;
 
         if ("Cash".equalsIgnoreCase(method)) {
@@ -60,6 +61,14 @@ public class PaymentService {
 
         paymentList.add(payment);
         storage.savePayments(paymentList);
+    }
+
+    public String generateNextPaymentId() {
+        List<String> ids = new ArrayList<>();
+        for (Payment payment : paymentList) {
+            ids.add(payment.getId());
+        }
+        return IdGenerator.generateNextId("PAY", ids);
     }
 
     public void processPayment(String paymentId) throws PaymentException {

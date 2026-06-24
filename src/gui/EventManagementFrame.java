@@ -31,7 +31,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class EventManagementFrame extends JFrame {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
@@ -103,6 +102,7 @@ public class EventManagementFrame extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         idField = new JTextField(16);
+        idField.setEditable(false);
         nameField = new JTextField(16);
         dateField = new JTextField(16);
         eventTypeField = new JTextField(16);
@@ -436,7 +436,7 @@ public class EventManagementFrame extends JFrame {
     private Event buildEventFromForm(boolean allowGeneratedId) throws ParseException {
         String id = idField.getText().trim();
         if (allowGeneratedId && id.isEmpty()) {
-            id = "EVT-" + UUID.randomUUID().toString().substring(0, 8);
+            id = eventService.generateNextEventId();
         }
 
         String name = nameField.getText().trim();
@@ -550,8 +550,8 @@ public class EventManagementFrame extends JFrame {
 
     private void clearForm() {
         eventTable.clearSelection();
-        idField.setText("");
-        idField.setEditable(true);
+        idField.setText(eventService.generateNextEventId());
+        idField.setEditable(false);
         nameField.setText("");
         dateField.setText(DATE_FORMAT.format(new Date()));
         eventTypeField.setText("");
