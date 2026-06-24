@@ -1,6 +1,7 @@
 package service;
 
 import exception.PaymentException;
+import exception.EventException;
 import model.CashPayment;
 import model.EWalletPayment;
 import model.Event;
@@ -25,6 +26,10 @@ public class PaymentService {
 
     public List<Payment> getAllPayments() {
         return paymentList;
+    }
+
+    public List<Event> getAllEvents() {
+        return eventService.getAllEvents();
     }
 
     public Payment getPaymentById(String id) {
@@ -105,6 +110,41 @@ public class PaymentService {
         return total;
     }
 
+    public double calculateEventBudget(String eventId) throws PaymentException {
+        try {
+            return eventService.calculateTotalBudget(eventId);
+        } catch (EventException e) {
+            throw new PaymentException(e.getMessage());
+        }
+    }
+
+    public double calculatePaidAmountByEvent(String eventId) {
+        double total = 0;
+        for (Payment payment : paymentList) {
+            if (payment.getEventId().equals(eventId) && "Paid".equalsIgnoreCase(payment.getStatus())) {
+                total += payment.getAmount();
+            }
+        }
+        return total;
+    }
+
+    public double calculatePendingAmountByEvent(String eventId) {
+        double total = 0;
+        for (Payment payment : paymentList) {
+            if (payment.getEventId().equals(eventId) && "Pending".equalsIgnoreCase(payment.getStatus())) {
+                total += payment.getAmount();
+            }
+        }
+        return total;
+    }
+
+    public double calculateRemainingAmountByEvent(String eventId) throws PaymentException {
+        double remaining = calculateEventBudget(eventId)
+                - calculatePaidAmountByEvent(eventId)
+                - calculatePendingAmountByEvent(eventId);
+        return Math.max(remaining, 0);
+    }
+
     public int countPaidPayments() {
         int total = 0;
 
@@ -142,6 +182,12 @@ public class PaymentService {
 
         if (amount <= 0) {
             throw new PaymentException("Jumlah pembayaran harus lebih dari 0.");
+        }
+
+        double remainingAmount = calculateRemainingAmountByEvent(eventId.trim());
+        if (amount > remainingAmount) {
+            throw new PaymentException("Jumlah pembayaran melebihi sisa tagihan event. Sisa: Rp "
+                    + String.format("%,.0f", remainingAmount));
         }
 
         if (method == null || method.trim().isEmpty()) {

@@ -3,6 +3,7 @@ package gui;
 import exception.PaymentException;
 import model.CashPayment;
 import model.EWalletPayment;
+import model.Event;
 import model.Payment;
 import model.TransferPayment;
 import service.PaymentService;
@@ -18,10 +19,12 @@ public class PaymentManagementFrame extends JFrame {
     private JTable paymentTable;
     private DefaultTableModel tableModel;
 
-    private JTextField eventIdField, amountField, detailOneField, detailTwoField;
+    private JTextField amountField, detailOneField, detailTwoField;
+    private JComboBox<EventItem> eventCombo;
     private JComboBox<String> methodCombo;
     private JLabel detailOneLabel, detailTwoLabel;
     private JLabel totalRevenueLabel, paidCountLabel, pendingCountLabel;
+    private JLabel eventBudgetLabel, eventPaidLabel, eventPendingLabel, eventRemainingLabel;
 
     public PaymentManagementFrame() {
         this.paymentService = new PaymentService();
@@ -33,8 +36,10 @@ public class PaymentManagementFrame extends JFrame {
         setLayout(new BorderLayout(10, 10));
 
         initComponents();
+        loadEventCombo();
         loadPaymentTable(paymentService.getAllPayments());
         updateReportSummary();
+        updateEventPaymentSummary();
     }
 
     private void initComponents() {
@@ -67,8 +72,8 @@ public class PaymentManagementFrame extends JFrame {
         gbc.insets = new Insets(6, 6, 6, 6);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        eventIdField = new JTextField(15);
         amountField = new JTextField(15);
+        eventCombo = new JComboBox<>();
         methodCombo = new JComboBox<>(new String[] {"Cash", "Transfer", "E-Wallet"});
 
         detailOneLabel = new JLabel("Diterima Oleh");
@@ -76,15 +81,31 @@ public class PaymentManagementFrame extends JFrame {
         detailOneField = new JTextField(15);
         detailTwoField = new JTextField(15);
 
+        eventCombo.addActionListener(event -> updateEventPaymentSummary());
         methodCombo.addActionListener(event -> updatePaymentDetailFields());
         updatePaymentDetailFields();
 
-        addField(formPanel, gbc, 0, 0, "Event ID", eventIdField);
+        addField(formPanel, gbc, 0, 0, "Event", eventCombo);
         addField(formPanel, gbc, 1, 0, "Jumlah", amountField);
         addField(formPanel, gbc, 2, 0, "Metode", methodCombo);
 
         addField(formPanel, gbc, 0, 2, detailOneLabel, detailOneField);
         addField(formPanel, gbc, 1, 2, detailTwoLabel, detailTwoField);
+
+        JPanel eventSummaryPanel = new JPanel(new GridLayout(2, 2, 8, 4));
+        eventBudgetLabel = new JLabel("Event Budget: Rp 0");
+        eventPaidLabel = new JLabel("Paid: Rp 0");
+        eventPendingLabel = new JLabel("Pending: Rp 0");
+        eventRemainingLabel = new JLabel("Remaining: Rp 0");
+        eventSummaryPanel.add(eventBudgetLabel);
+        eventSummaryPanel.add(eventPaidLabel);
+        eventSummaryPanel.add(eventPendingLabel);
+        eventSummaryPanel.add(eventRemainingLabel);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 4;
+        formPanel.add(eventSummaryPanel, gbc);
 
         JButton addButton = new JButton("Tambah");
         addButton.addActionListener(event -> addPayment());
@@ -109,7 +130,7 @@ public class PaymentManagementFrame extends JFrame {
         buttonPanel.add(clearButton);
 
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.gridwidth = 4;
         formPanel.add(buttonPanel, gbc);
 
@@ -164,6 +185,13 @@ public class PaymentManagementFrame extends JFrame {
         }
     }
 
+    private void loadEventCombo() {
+        eventCombo.removeAllItems();
+        for (Event event : paymentService.getAllEvents()) {
+            eventCombo.addItem(new EventItem(event));
+        }
+    }
+
     private String getPaymentMethod(Payment payment) {
         if (payment instanceof CashPayment) {
             return "Cash";
@@ -178,7 +206,7 @@ public class PaymentManagementFrame extends JFrame {
 
     private void addPayment() {
         try {
-            String eventId = eventIdField.getText();
+            String eventId = getSelectedEventId();
             double amount = Double.parseDouble(amountField.getText());
             String method = methodCombo.getSelectedItem().toString();
             String detailOne = detailOneField.getText();
@@ -264,6 +292,7 @@ public class PaymentManagementFrame extends JFrame {
     private void refreshData() {
         loadPaymentTable(paymentService.getAllPayments());
         updateReportSummary();
+        updateEventPaymentSummary();
     }
 
     private void updateReportSummary() {
@@ -274,10 +303,68 @@ public class PaymentManagementFrame extends JFrame {
     }
 
     private void clearForm() {
-        eventIdField.setText("");
+        if (eventCombo.getItemCount() > 0) {
+            eventCombo.setSelectedIndex(0);
+        }
         amountField.setText("");
         detailOneField.setText("");
         detailTwoField.setText("");
         methodCombo.setSelectedIndex(0);
+        updateEventPaymentSummary();
+    }
+
+    private String getSelectedEventId() throws PaymentException {
+        EventItem selectedEvent = (EventItem) eventCombo.getSelectedItem();
+        if (selectedEvent == null) {
+            throw new PaymentException("Event wajib dipilih.");
+        }
+        return selectedEvent.getId();
+    }
+
+    private void updateEventPaymentSummary() {
+        EventItem selectedEvent = (EventItem) eventCombo.getSelectedItem();
+        if (selectedEvent == null) {
+            setEventSummary(0, 0, 0, 0);
+            return;
+        }
+
+        try {
+            String eventId = selectedEvent.getId();
+            setEventSummary(
+                    paymentService.calculateEventBudget(eventId),
+                    paymentService.calculatePaidAmountByEvent(eventId),
+                    paymentService.calculatePendingAmountByEvent(eventId),
+                    paymentService.calculateRemainingAmountByEvent(eventId));
+        } catch (PaymentException e) {
+            setEventSummary(0, 0, 0, 0);
+        }
+    }
+
+    private void setEventSummary(double budget, double paid, double pending, double remaining) {
+        eventBudgetLabel.setText("Event Budget: Rp " + formatAmount(budget));
+        eventPaidLabel.setText("Paid: Rp " + formatAmount(paid));
+        eventPendingLabel.setText("Pending: Rp " + formatAmount(pending));
+        eventRemainingLabel.setText("Remaining: Rp " + formatAmount(remaining));
+    }
+
+    private String formatAmount(double amount) {
+        return String.format("%,.0f", amount);
+    }
+
+    private static class EventItem {
+        private final Event event;
+
+        EventItem(Event event) {
+            this.event = event;
+        }
+
+        String getId() {
+            return event.getId();
+        }
+
+        @Override
+        public String toString() {
+            return event.getId() + " - " + event.getName() + " (" + event.getEventType() + ")";
+        }
     }
 }
