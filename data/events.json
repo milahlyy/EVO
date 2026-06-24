@@ -1,24 +1,28 @@
 [
   {
-    "theme": "Superhero",
-    "guestCount": 100,
     "id": "EVT-999",
-    "name": "Test Simpan JSON",
-    "clientId": "CLI-001",
-    "eventDate": "Jun 18, 2026, 1:12:19 AM",
+    "name": "HBD sekar",
+    "clientId": "baa2606e-1e35-49e9-8685-9da552ec1e58",
+    "eventDate": "Jun 18, 2026, 12:00:00 AM",
+    "status": "Planned",
+    "eventType": "Birthday",
+    "expectedAttendance": 10,
+    "eventConcept": "Superhero",
+    "specialRequest": "",
     "basePrice": 0.0,
-    "eventType": "Birthday"
+    "eventCategory": "Personal"
   },
   {
-    "guestCount": 50,
-    "cateringCapacity": 100,
-    "decorationConcept": "beach",
     "id": "1989",
     "name": "wedding of mawar",
     "clientId": "baa2606e-1e35-49e9-8685-9da552ec1e58",
     "eventDate": "Jul 18, 2026, 12:00:00 AM",
     "status": "Planned",
+    "eventType": "Wedding",
+    "expectedAttendance": 50,
+    "eventConcept": "beach",
+    "specialRequest": "",
     "basePrice": 1.5E7,
-    "eventType": "Wedding"
+    "eventCategory": "Personal"
   }
 ]

@@ -1,0 +1,34 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: evo-postgres
+    environment:
+      POSTGRES_DB: evo_db
+      POSTGRES_USER: evo_user
+      POSTGRES_PASSWORD: evo_pass
+    ports:
+      - "55432:5432"
+    volumes:
+      - evo_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U evo_user -d evo_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  flyway:
+    image: flyway/flyway:10-alpine
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./db/migration:/flyway/migrations
+    command:
+      - -url=jdbc:postgresql://postgres:5432/evo_db
+      - -user=evo_user
+      - -password=evo_pass
+      - -locations=filesystem:/flyway/migrations
+      - migrate
+
+volumes:
+  evo_postgres_data:

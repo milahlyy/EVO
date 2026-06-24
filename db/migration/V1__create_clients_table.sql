@@ -1,0 +1,11 @@
+CREATE TABLE clients (
+    id VARCHAR(64) PRIMARY KEY,
+    name VARCHAR(120) NOT NULL,
+    email VARCHAR(160) NOT NULL UNIQUE,
+    phone VARCHAR(30) NOT NULL,
+    address TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_clients_name ON clients (name);

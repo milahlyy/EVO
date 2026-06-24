@@ -4,51 +4,30 @@ import exception.ValidationException;
 import model.Client;
 import storage.ClientStorage;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class ClientService {
     private final ClientStorage clientStorage;
-    private final List<Client> clients;
 
     public ClientService() {
         this.clientStorage = new ClientStorage();
-        this.clients = new ArrayList<>(clientStorage.loadClients());
     }
 
     public List<Client> getAllClients() {
-        return new ArrayList<>(clients);
+        return clientStorage.loadClients();
     }
 
     public Client getClientById(String id) {
-        for (Client client : clients) {
-            if (client.getId().equals(id)) {
-                return client;
-            }
-        }
-
-        return null;
+        return clientStorage.findClientById(id);
     }
 
     public List<Client> searchClients(String keyword) {
-        List<Client> result = new ArrayList<>();
-
         if (keyword == null || keyword.trim().isEmpty()) {
             return getAllClients();
         }
 
-        String lowerKeyword = keyword.trim().toLowerCase();
-
-        for (Client client : clients) {
-            if (client.getName().toLowerCase().contains(lowerKeyword)
-                    || client.getEmail().toLowerCase().contains(lowerKeyword)
-                    || client.getPhone().toLowerCase().contains(lowerKeyword)) {
-                result.add(client);
-            }
-        }
-
-        return result;
+        return clientStorage.searchClients(keyword.trim());
     }
 
     public void addClient(String name, String email, String phone, String address) throws ValidationException {
@@ -61,8 +40,9 @@ public class ClientService {
                 phone.trim(),
                 address.trim());
 
-        clients.add(client);
-        clientStorage.saveClients(clients);
+        if (!clientStorage.addClient(client)) {
+            throw new ValidationException("Client gagal ditambahkan.");
+        }
     }
 
     public void updateClient(String id, String name, String email, String phone, String address)
@@ -80,7 +60,9 @@ public class ClientService {
         existingClient.setPhone(phone.trim());
         existingClient.setAddress(address.trim());
 
-        clientStorage.saveClients(clients);
+        if (!clientStorage.updateClient(existingClient)) {
+            throw new ValidationException("Client gagal diedit.");
+        }
     }
 
     public void deleteClient(String id) throws ValidationException {
@@ -91,8 +73,9 @@ public class ClientService {
             throw new ValidationException("Client tidak ditemukan.");
         }
 
-        clients.remove(client);
-        clientStorage.saveClients(clients);
+        if (!clientStorage.deleteClient(id)) {
+            throw new ValidationException("Client gagal dihapus.");
+        }
     }
 
     private void validateClientInput(String currentClientId, String name, String email, String phone, String address)
@@ -110,11 +93,10 @@ public class ClientService {
             throw new ValidationException("Nomor telepon harus 8 sampai 15 karakter dan hanya berisi angka, +, -, atau spasi.");
         }
 
-        for (Client client : clients) {
-            boolean sameClient = currentClientId != null && client.getId().equals(currentClientId);
-            if (!sameClient && client.getEmail().equalsIgnoreCase(email.trim())) {
-                throw new ValidationException("Email client sudah digunakan.");
-            }
+        Client client = clientStorage.findClientByEmail(email.trim());
+        boolean sameClient = currentClientId != null && client != null && client.getId().equals(currentClientId);
+        if (client != null && !sameClient) {
+            throw new ValidationException("Email client sudah digunakan.");
         }
     }
 
