@@ -19,5 +19,12 @@
     "password": "wike123",
     "fullName": "wike mawar",
     "role": "Admin"
+  },
+  {
+    "id": "6c5c6079-e6ea-41d4-9cbd-295690894f52",
+    "username": "nadine",
+    "password": "nadine123",
+    "fullName": "nadine amizah",
+    "role": "Staff"
   }
 ]
