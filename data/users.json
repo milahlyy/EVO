@@ -1,30 +1,44 @@
 [
   {
-    "id": "abde4191-dd28-4cad-92f5-68710afeff73",
+    "id": "USR-0002",
     "username": "admin",
     "password": "admin123",
     "fullName": "Default Admin",
     "role": "Admin"
   },
   {
-    "id": "38915863-3745-4fa5-95f8-4cacac53288e",
+    "id": "USR-0003",
     "username": "mila",
     "password": "milahly",
     "fullName": "kamila",
     "role": "Staff"
   },
   {
-    "id": "b6349d58-76ca-41ef-b92b-4386b4140e44",
+    "id": "USR-0004",
     "username": "wike",
     "password": "wike123",
     "fullName": "wike mawar",
     "role": "Admin"
   },
   {
-    "id": "6c5c6079-e6ea-41d4-9cbd-295690894f52",
+    "id": "USR-0005",
     "username": "nadine",
     "password": "nadine123",
     "fullName": "nadine amizah",
     "role": "Staff"
+  },
+  {
+    "id": "USR-0006",
+    "username": "kila",
+    "password": "kila123",
+    "fullName": "kilatrav",
+    "role": "Admin"
+  },
+  {
+    "id": "USR-0001",
+    "username": "helo",
+    "password": "helo123",
+    "fullName": "helo",
+    "role": "Admin"
   }
 ]

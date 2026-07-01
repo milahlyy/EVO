@@ -1,14 +1,14 @@
 package service;
 
 import exception.ValidationException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import model.Admin;
 import model.Staff;
 import model.User;
 import storage.UserStorage;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import util.IdGenerator;
 
 public class UserService {
     private final UserStorage userStorage;
@@ -51,9 +51,16 @@ public class UserService {
     public void addUser(String username, String password, String fullName, String role) throws ValidationException {
         validateUserInput(null, username, password, fullName, role);
 
-        User user = createUserByRole(UUID.randomUUID().toString(), username.trim(), password, fullName.trim(), role);
+        User user = createUserByRole(generateNextUserId(), username.trim(), password, fullName.trim(), role);
         users.add(user);
         userStorage.saveUsers(users);
+    }
+        public String generateNextUserId() {
+        List<String> ids = new ArrayList<>();
+        for (User user : users) {
+            ids.add(user.getId());
+        }
+        return IdGenerator.generateNextId("USR", ids);
     }
 
     public void updateUser(String id, String username, String password, String fullName, String role)
